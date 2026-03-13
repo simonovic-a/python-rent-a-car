@@ -1,25 +1,29 @@
 from Db import Db
 
+
 class User(Db):
 
     def __init__(self):
         super().__init__()
-        con = self._get_connection()
-        print(con)
+        self.__name = None
+        self.__age = None
 
-
-    def get_age(self):
-        return self.__age
-
-    def set_age(self, age):
-        if age < 18:
-            raise ValueError("Morate imati minimum 18 godina")
-        self.__age = age
-
-    def get_name(self):
+    @property
+    def name(self):
         return self.__name
 
-    def set_name(self, name):
+    @name.setter
+    def name(self, name):
         if len(name) < 3:
-            raise ValueError("Ime mora imati bar 3 karaktera")
+            raise ValueError("Name must have at least 3 characters.")
         self.__name = name
+
+    @property
+    def age(self):
+        return self.__age
+
+    @age.setter
+    def age(self, age):
+        if age < 18:
+            raise ValueError("You must be 18 years old.")
+        self.__age = age

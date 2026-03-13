@@ -1,7 +1,4 @@
-
-
 class Car:
-
     VALID_CARS = {
         "Audi": [
             {"model": "A4", "production_year": 2004},
@@ -29,7 +26,6 @@ class Car:
     @property
     def model(self):
         return self.__model
-
 
     @model.setter
     def model(self, model):
@@ -70,4 +66,3 @@ class Car:
 
         if self.__model is not None and self.__production_year is not None:
             raise ValueError("Production year cannot be set")
-
