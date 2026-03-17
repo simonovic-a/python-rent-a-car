@@ -1,7 +1,7 @@
-from Db import Db
+users = []
 
 
-class User(Db):
+class User():
 
     def __init__(self):
         super().__init__()
@@ -13,10 +13,12 @@ class User(Db):
         return self.__name
 
     @name.setter
-    def name(self, name):
-        if len(name) < 3:
-            raise ValueError("Name must have at least 3 characters.")
-        self.__name = name
+    def name(self, new_name):
+        split_name = new_name.split()
+        if len(split_name) < 2:
+            raise ValueError("Name must contain first and last name.")
+
+        self.__name = new_name
 
     @property
     def age(self):
@@ -27,3 +29,7 @@ class User(Db):
         if age < 18:
             raise ValueError("You must be 18 years old.")
         self.__age = age
+
+    def create(self):
+        users.append([self.__name, self.__age])
+        print(users)

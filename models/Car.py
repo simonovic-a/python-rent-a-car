@@ -1,20 +1,20 @@
 class Car:
     VALID_CARS = {
         "Audi": [
-            {"model": "A4", "production_year": 2004},
-            {"model": "A5", "production_year": 2005},
-            {"model": "A6", "production_year": 2006},
+            {"model": "A4", "production_year": 2004, "rented": False, "rented_until": None},
+            {"model": "A5", "production_year": 2005, "rented": False, "rented_until": None},
+            {"model": "A6", "production_year": 2006, "rented": False, "rented_until": None},
         ],
         "BMW": [
-            {"model": "M3", "production_year": 2012},
-            {"model": "M4", "production_year": 2018},
-            {"model": "M5", "production_year": 2021},
+            {"model": "M3", "production_year": 2012, "rented": False, "rented_until": None},
+            {"model": "M4", "production_year": 2018, "rented": False, "rented_until": None},
+            {"model": "M5", "production_year": 2021, "rented": False, "rented_until": None},
         ]
         ,
         "Mercedes": [
-            {"model": "GLK", "production_year": 2015},
-            {"model": "GLE", "production_year": 2017},
-            {"model": "GLC", "production_year": 2019},
+            {"model": "GLK", "production_year": 2015, "rented": False, "rented_until": None},
+            {"model": "GLE", "production_year": 2017, "rented": True, "rented_until": None},
+            {"model": "GLC", "production_year": 2019, "rented": False, "rented_until": None},
         ]
     }
 
