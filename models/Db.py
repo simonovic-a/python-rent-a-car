@@ -8,7 +8,7 @@ class Db:
             host="localhost",
             user="root",
             password="",
-            database=""
+            database="rent_a_car"
         )
 
     def _get_connection(self):

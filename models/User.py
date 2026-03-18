@@ -1,7 +1,7 @@
-users = []
+from models.Db import Db
 
 
-class User():
+class User(Db):
 
     def __init__(self):
         super().__init__()
@@ -31,5 +31,10 @@ class User():
         self.__age = age
 
     def create(self):
-        users.append([self.__name, self.__age])
-        print(users)
+
+        con = self._get_connection()
+        cursor = con.cursor()
+        cursor.execute("INSERT INTO users (name, age) VALUES (%s, %s)", (self.__name, self.__age))
+        con.commit()
+        cursor.close()
+        print("Successfully created new user.")
