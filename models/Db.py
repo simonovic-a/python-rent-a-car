@@ -8,7 +8,8 @@ class Db:
             host="localhost",
             user="root",
             password="",
-            database="rent_a_car"
+            database="rent_a_car",
+            cursorclass=pymysql.cursors.DictCursor
         )
 
     def _get_connection(self):

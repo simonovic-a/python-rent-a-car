@@ -1,13 +1,11 @@
-
-from models.User import User
-from models.User import users
 from models.Car import Car
-
+from models.User import User
 
 print("1. Add user\n"
-      "2. Show users\n"
+      "2. Show all users\n"
       "3. Show available vehicles\n"
-      "4. Show rented vehicles")
+      "4. Show rented vehicles\n"
+      "5. Add car")
 
 available_options = [1, 2, 3, 4]
 option = None
@@ -23,8 +21,10 @@ while option is None or option not in available_options:
         option = None
 
     elif option == 2:
+        user = User()
+        users = user.get_all_users()
         for user in users:
-            print(user)
+            print(f"Id: {user["id"]} | Name: {user["name"]} | Age: {user["age"]}")
         option = None
 
     elif option == 3 or option == 4:

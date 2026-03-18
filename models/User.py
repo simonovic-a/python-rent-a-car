@@ -30,6 +30,17 @@ class User(Db):
             raise ValueError("You must be 18 years old.")
         self.__age = age
 
+    def get_all_users(self):
+        con = self._get_connection()
+        cursor = con.cursor()
+
+        cursor.execute("SELECT id, name, age FROM users")
+        users = cursor.fetchall()
+
+        cursor.close()
+
+        return users
+
     def create(self):
 
         con = self._get_connection()
