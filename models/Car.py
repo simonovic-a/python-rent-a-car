@@ -1,27 +1,23 @@
-class Car:
-    VALID_CARS = {
-        "Audi": [
-            {"model": "A4", "production_year": 2004, "rented": False, "rented_until": None},
-            {"model": "A5", "production_year": 2005, "rented": False, "rented_until": None},
-            {"model": "A6", "production_year": 2006, "rented": False, "rented_until": None},
-        ],
-        "BMW": [
-            {"model": "M3", "production_year": 2012, "rented": False, "rented_until": None},
-            {"model": "M4", "production_year": 2018, "rented": False, "rented_until": None},
-            {"model": "M5", "production_year": 2021, "rented": False, "rented_until": None},
-        ]
-        ,
-        "Mercedes": [
-            {"model": "GLK", "production_year": 2015, "rented": False, "rented_until": None},
-            {"model": "GLE", "production_year": 2017, "rented": True, "rented_until": None},
-            {"model": "GLC", "production_year": 2019, "rented": False, "rented_until": None},
-        ]
-    }
+from datetime import datetime
+
+from models.Db import Db
+
+class Car(Db):
 
     def __init__(self):
+        super().__init__()
         self.__brand = None
         self.__model = None
         self.__production_year = None
+
+    @property
+    def brand(self):
+        return self.__brand
+
+    @brand.setter
+    def brand(self, brand):
+        self.__brand = brand
+
 
     @property
     def model(self):
@@ -31,38 +27,83 @@ class Car:
     def model(self, model):
         if self.__brand is None:
             raise ValueError("Brand must be set.")
-
-        valid_models = []
-        for car in Car.VALID_CARS[self.__brand]:
-            valid_models.append(car['model'])
-
-        if model not in valid_models:
-            raise ValueError("Invalid model")
         self.__model = model
-
-        for car_model in Car.VALID_CARS[self.__brand]:
-            if car_model["model"] == self.__model:
-                self.__production_year = car_model["production_year"]
-
-    @property
-    def brand(self):
-        return self.__brand
-
-    @brand.setter
-    def brand(self, brand):
-        if brand not in Car.VALID_CARS:
-            raise ValueError("Invalid Car")
-
-        self.__brand = brand
 
     @property
     def production_year(self):
         return self.__production_year
 
     @production_year.setter
-    def production_year(self, year):
-        if self.__model is None:
-            raise ValueError("Production year cannot be set.")
+    def production_year(self, production_year):
+        if self.model is None:
+            raise ValueError("Model must be set.")
+        self.__production_year = production_year
 
-        if self.__model is not None and self.__production_year is not None:
-            raise ValueError("Production year cannot be set")
+    def create(self):
+        con = self._get_connection()
+        cursor = con.cursor()
+        cursor.execute(
+            "INSERT INTO cars (brand, model, production_year, rented, user_id, rented_until) VALUES (%s, %s, %s, %s, %s, %s)",
+            (self.__brand, self.__model, self.__production_year, False, None ,None)
+        )
+        con.commit()
+        cursor.close()
+        print("Successfully added new car.")
+
+    def all_cars(self):
+        con = self._get_connection()
+        cursor = con.cursor()
+
+        cursor.execute("SELECT id, brand, model, production_year, rented, user_id, rented_until FROM cars")
+        cars = cursor.fetchall()
+
+        con.commit()
+        cursor.close()
+        return cars
+
+    def rent_car(self, car_id, user_id, rent_date):
+        rented_until = datetime.strptime(rent_date, "%Y-%m-%d %H:%M:%S")
+
+        con = self._get_connection()
+        cursor = con.cursor()
+
+        cursor.execute("UPDATE cars SET rented = %s, user_id = %s, rented_until = %s WHERE id = %s AND rented = %s",
+                       (True, user_id, rented_until, car_id, False))
+        con.commit()
+        cursor.close()
+        print(f"Car with ID {car_id} has been successfully rented.")
+
+    def return_car(self, car_id):
+        con = self._get_connection()
+        cursor = con.cursor()
+
+        cursor.execute(
+            "UPDATE cars SET rented = %s, user_id = %s, rented_until = %s WHERE id = %s and rented = %s",
+            (False, None, None, car_id, True)
+        )
+
+        con.commit()
+
+        if cursor.rowcount == 0:
+            print("Car is not rented or does not exist.")
+        else:
+            print(f"Car with ID {car_id} has been successfully returned.")
+
+        cursor.close()
+
+    def time_left(self, rented_until):
+        now = datetime.now()
+        diff = rented_until - now
+
+        total_seconds = diff.total_seconds()
+
+        if total_seconds <= 0:
+            return "Expired"
+
+        days = int(total_seconds // (24 * 3600))
+
+        if days >= 1:
+            return f"{days} day(s)"
+        else:
+            hours = int(total_seconds // 3600)
+            return f"{hours} hour(s)"

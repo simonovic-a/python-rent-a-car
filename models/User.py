@@ -42,7 +42,6 @@ class User(Db):
         return users
 
     def create(self):
-
         con = self._get_connection()
         cursor = con.cursor()
         cursor.execute("INSERT INTO users (name, age) VALUES (%s, %s)", (self.__name, self.__age))
